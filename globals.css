@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --paper: #f7f5f0;
+  --ink: #12213a;
+  --ink-soft: #45566f;
+  --teal: #3d6b63;
+  --teal-soft: #e3ece9;
+  --gold: #b5842c;
+  --gold-soft: #f3e8d2;
+  --rust: #b23b3b;
+  --rust-soft: #f6e4e2;
+  --grey: #8a8578;
+  --line: #dcd7c9;
+}
+
+html,
+body {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+body {
+  font-feature-settings: "tnum" 1;
+}
+
+.font-serif-report {
+  font-family: var(--font-source-serif), Georgia, serif;
+}
+
+.font-sans-ui {
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+.report-divider {
+  border-top: 1px solid var(--line);
+}
+
+::selection {
+  background: var(--teal-soft);
+}
