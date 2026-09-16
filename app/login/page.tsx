@@ -43,24 +43,31 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-paper px-6">
-      <div className="w-full max-w-sm">
-        <div className="mb-10">
-          <p className="text-xs tracking-wide text-grey mb-1">Private access</p>
+      <div className="w-full max-w-sm card p-8">
+        <div className="mb-8">
+          <div className="w-9 h-9 rounded-md bg-ink flex items-center justify-center mb-4">
+            <span className="text-paper text-sm font-bold">F</span>
+          </div>
+          <p className="text-xs text-grey mb-1">Private access</p>
           <h1 className="font-serif-report text-2xl text-ink leading-tight">
             FinOps Career Accelerator
           </h1>
         </div>
 
-        <div className="flex gap-6 mb-6 report-divider pt-4">
+        <div className="flex gap-1 mb-6 bg-paper p-1 rounded-sm">
           <button
-            className={`text-sm pb-1 ${mode === "sign_in" ? "text-ink border-b-2 border-teal" : "text-grey"}`}
+            className={`flex-1 text-sm py-1.5 rounded-sm font-medium ${
+              mode === "sign_in" ? "bg-surface text-ink shadow-sm" : "text-grey"
+            }`}
             onClick={() => setMode("sign_in")}
             type="button"
           >
             Sign in
           </button>
           <button
-            className={`text-sm pb-1 ${mode === "sign_up" ? "text-ink border-b-2 border-teal" : "text-grey"}`}
+            className={`flex-1 text-sm py-1.5 rounded-sm font-medium ${
+              mode === "sign_up" ? "bg-surface text-ink shadow-sm" : "text-grey"
+            }`}
             onClick={() => setMode("sign_up")}
             type="button"
           >
@@ -73,7 +80,7 @@ export default function LoginPage() {
             <div>
               <label className="block text-xs text-grey mb-1">Full name</label>
               <input
-                className="w-full border border-line bg-white px-3 py-2 text-sm rounded-sm focus:outline-none focus:ring-2 focus:ring-teal"
+                className="w-full border border-line bg-surface px-3 py-2 text-sm rounded-sm focus:outline-none focus:ring-2 focus:ring-teal"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required
@@ -85,7 +92,7 @@ export default function LoginPage() {
             <label className="block text-xs text-grey mb-1">Email</label>
             <input
               type="email"
-              className="w-full border border-line bg-white px-3 py-2 text-sm rounded-sm focus:outline-none focus:ring-2 focus:ring-teal"
+              className="w-full border border-line bg-surface px-3 py-2 text-sm rounded-sm focus:outline-none focus:ring-2 focus:ring-teal"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -96,7 +103,7 @@ export default function LoginPage() {
             <label className="block text-xs text-grey mb-1">Password</label>
             <input
               type="password"
-              className="w-full border border-line bg-white px-3 py-2 text-sm rounded-sm focus:outline-none focus:ring-2 focus:ring-teal"
+              className="w-full border border-line bg-surface px-3 py-2 text-sm rounded-sm focus:outline-none focus:ring-2 focus:ring-teal"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               minLength={6}
@@ -113,9 +120,9 @@ export default function LoginPage() {
                     type="button"
                     key={r}
                     onClick={() => setRole(r)}
-                    className={`flex-1 border rounded-sm px-3 py-2 text-sm capitalize ${
+                    className={`flex-1 border rounded-sm px-3 py-2 text-sm capitalize font-medium ${
                       role === r
-                        ? "border-teal bg-teal-soft text-ink"
+                        ? "border-teal bg-teal-soft text-teal-dark"
                         : "border-line text-grey"
                     }`}
                   >
@@ -133,11 +140,7 @@ export default function LoginPage() {
             <p className="text-sm text-rust bg-rust-soft px-3 py-2 rounded-sm">{error}</p>
           )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-ink text-paper text-sm py-2.5 rounded-sm hover:bg-ink/90 disabled:opacity-60"
-          >
+          <button type="submit" disabled={loading} className="btn btn-primary w-full">
             {loading ? "Please wait…" : mode === "sign_up" ? "Create account" : "Sign in"}
           </button>
         </form>

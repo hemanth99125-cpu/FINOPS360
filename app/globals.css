@@ -2,18 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+  Design tokens.
+  Names are kept stable (--teal, --gold, --rust, --line, etc.) because many
+  components already reference them — changing the values here is enough to
+  restyle the whole app without touching every file's className strings.
+*/
 :root {
-  --paper: #f7f5f0;
-  --ink: #12213a;
-  --ink-soft: #45566f;
-  --teal: #3d6b63;
-  --teal-soft: #e3ece9;
-  --gold: #b5842c;
-  --gold-soft: #f3e8d2;
-  --rust: #b23b3b;
-  --rust-soft: #f6e4e2;
-  --grey: #8a8578;
-  --line: #dcd7c9;
+  --paper: #f4f6fb;       /* app background: cool slate, not cream */
+  --surface: #ffffff;     /* card / raised surface */
+  --ink: #101828;         /* near-navy, high contrast */
+  --ink-soft: #55617a;
+  --teal: #0b8a80;        /* primary action + "savings" signal */
+  --teal-dark: #086b63;
+  --teal-soft: #e2f5f2;
+  --gold: #e0982a;        /* attention / streaks / in-progress signal */
+  --gold-soft: #fbecd4;
+  --rust: #e2523d;        /* risk / waste signal */
+  --rust-soft: #fce6e2;
+  --grey: #7c8598;
+  --line: #e3e7f0;
+
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --shadow-card: 0 1px 2px rgba(16, 24, 40, 0.04), 0 2px 8px rgba(16, 24, 40, 0.06);
+  --shadow-card-hover: 0 2px 4px rgba(16, 24, 40, 0.06), 0 8px 20px rgba(16, 24, 40, 0.10);
 }
 
 html,
@@ -26,8 +40,15 @@ body {
   font-feature-settings: "tnum" 1;
 }
 
+/*
+  Headline treatment: one typeface (Inter) throughout, differentiated by
+  weight and tracking rather than a second serif family — simpler, and one
+  less font to fail to load.
+*/
 .font-serif-report {
-  font-family: var(--font-source-serif), Georgia, serif;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-weight: 650;
+  letter-spacing: -0.015em;
 }
 
 .font-sans-ui {
@@ -44,4 +65,84 @@ body {
 
 ::selection {
   background: var(--teal-soft);
+}
+
+/* App-wide interaction feedback: every clickable element gets a smooth
+   transition, a pressed-down state on click, and a visible focus ring.
+   This is the main fix for clicks feeling unresponsive — every button and
+   link now visibly acknowledges the click within ~100ms. */
+@layer base {
+  a,
+  button,
+  input,
+  select,
+  textarea {
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease,
+      color 150ms ease,
+      box-shadow 150ms ease,
+      transform 100ms ease;
+  }
+
+  button:not(:disabled):active,
+  a:active {
+    transform: scale(0.98);
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--teal);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-card);
+  }
+
+  .card-hover:hover {
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-1px);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: var(--radius-sm);
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .btn-primary {
+    background: var(--ink);
+    color: var(--surface);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: var(--teal-dark);
+  }
+  .btn-primary:disabled {
+    opacity: 0.6;
+  }
+
+  .btn-secondary {
+    background: var(--teal-soft);
+    color: var(--teal-dark);
+  }
+  .btn-secondary:hover:not(:disabled) {
+    background: var(--teal);
+    color: var(--surface);
+  }
 }
