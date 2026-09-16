@@ -1,7 +1,50 @@
 export type LessonContent = {
   sections: { heading: string; body: string }[];
   simulator?: { instances: SimInstance[] };
+  tokenSimulator?: { config: TokenSimConfig };
 };
+
+export type TokenSimConfig = {
+  modelTier: "small" | "medium" | "frontier";
+  monthlyRequestsThousands: number;
+  avgInputTokens: number;
+  avgOutputTokens: number;
+  cachingEnabled: boolean;
+  cacheHitRatePct: number;
+};
+
+// Illustrative per-1M-token rates for teaching purposes, not a live provider
+// price list — real rates vary by provider and change over time.
+export const TOKEN_RATES: Record<TokenSimConfig["modelTier"], { input: number; output: number }> = {
+  small: { input: 0.15, output: 0.6 },
+  medium: { input: 1.0, output: 4.0 },
+  frontier: { input: 3.0, output: 15.0 },
+};
+
+// Cached input tokens are billed at a steep discount versus a fresh read —
+// illustrative of how provider prompt-caching discounts work in practice.
+export const CACHE_DISCOUNT_MULTIPLIER = 0.1;
+
+export function tokenMonthlyCost(cfg: TokenSimConfig): number {
+  const rate = TOKEN_RATES[cfg.modelTier];
+  const requests = cfg.monthlyRequestsThousands * 1000;
+  const totalInputTokens = requests * cfg.avgInputTokens;
+  const totalOutputTokens = requests * cfg.avgOutputTokens;
+
+  let inputCost: number;
+  if (cfg.cachingEnabled) {
+    const cachedTokens = totalInputTokens * (cfg.cacheHitRatePct / 100);
+    const freshTokens = totalInputTokens - cachedTokens;
+    inputCost =
+      (freshTokens / 1_000_000) * rate.input +
+      (cachedTokens / 1_000_000) * rate.input * CACHE_DISCOUNT_MULTIPLIER;
+  } else {
+    inputCost = (totalInputTokens / 1_000_000) * rate.input;
+  }
+
+  const outputCost = (totalOutputTokens / 1_000_000) * rate.output;
+  return inputCost + outputCost;
+}
 
 export type SimInstance = {
   id: string;

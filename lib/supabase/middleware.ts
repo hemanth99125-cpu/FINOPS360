@@ -47,14 +47,13 @@ export async function updateSession(request: NextRequest) {
   }
 
   // Role-based routing: keep learners out of /tracker and vice versa.
+  // The role is already present on the user object from getUser() above
+  // (set at signup and stored in Supabase auth's user metadata), so this
+  // no longer needs a second network round-trip to a profiles table —
+  // that extra query was adding real, avoidable latency to every single
+  // navigation in the app.
   if (user && !isAuthRoute && !isPublicAsset) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .single();
-
-    const role = profile?.role ?? "learner";
+    const role = (user.user_metadata?.role as string | undefined) ?? "learner";
 
     if (path.startsWith("/tracker") && role !== "tracker") {
       return redirectTo("/dashboard");

@@ -7,6 +7,7 @@ import { useActiveTime } from "@/lib/useActiveTime";
 import { trackLessonProgress, flushPendingSync } from "@/lib/activity";
 import SyncBadge, { SyncState } from "@/components/SyncBadge";
 import CostSimulator from "@/components/CostSimulator";
+import TokenCostSimulator from "@/components/TokenCostSimulator";
 import type { LessonContent } from "@/lib/types";
 
 export default function LessonClient({
@@ -114,6 +115,12 @@ export default function LessonClient({
       {lesson.content.simulator && (
         <div className="mt-6">
           <CostSimulator initialInstances={lesson.content.simulator.instances} />
+        </div>
+      )}
+
+      {lesson.content.tokenSimulator && (
+        <div className="mt-6">
+          <TokenCostSimulator initialConfig={lesson.content.tokenSimulator.config} />
         </div>
       )}
 
